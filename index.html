@@ -1,44 +1,23 @@
 <!DOCTYPE html>
 <html>
-<head>
-<style>
-	.roomsContainer {
-		margin: 10px 0 0 10px;
-		position:relative;
-		overflow:hidden;
-		width:700px;
-		height:300px;
-		border:1px solid;
-	}
-	.roomsContent {
-		height:auto;
-		background:transparent;
-		display:inline-block;
-		position:relative;
-	}
-	.buttons {
-		position:absolute;
-		bottom: 2px;
-		right :2px;
-		z-index: 20;
-	}
-</style>
-</head>
-<body style="margin:0px;">
+	<head>
+		<link rel="stylesheet" type="text/css" href="css/roomsjs.css">
+	</head>
+	<body style="margin:0px;">
 
-	<div class="roomsContainer">
-		<img class="roomsContent" src="img/rooms.svg" style="width:400px;" alt="" />
-		<div class="buttons"><button class="roomsMinus">-</button> <button class="roomsPlus">+</button></div>
-	</div>
+		<div class="roomsContainer">
+			<img class="roomsContent" src="img/rooms.svg" style="width:400px;" alt="" />
+			<div class="buttons"><button class="roomsMinus">-</button> <button class="roomsPlus">+</button></div>
+		</div>
 
-	<div class="roomsContainer">
-		<img class="roomsContent" src="img/rooms.svg" style="width:800px;" alt="" />
-		<div class="buttons"><button class="roomsMinus">-</button> <button class="roomsPlus">+</button></div>
-	</div>
+		<div class="roomsContainer">
+			<img class="roomsContent" src="img/rooms.svg" style="width:800px;" alt="" />
+			<div class="buttons"><button class="roomsMinus">-</button> <button class="roomsPlus">+</button></div>
+		</div>
 
-<script>
-roomsJS(1, 9);
-roomsJS(2, 3);
+	<script>
+		roomsJS(1, 9);
+		roomsJS(2, 3);
 
 function roomsJS(roomNum, stepsNum) {
 
@@ -155,7 +134,9 @@ function roomsJS(roomNum, stepsNum) {
 	}
 }
 
-</script>
-<script src="js/rooms.js"></script>
-</body>
+	</script>
+	
+
+	<script src="js/rooms.js" type="text/javascript"></script>
+	</body>
 </html>

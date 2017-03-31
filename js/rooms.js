@@ -1,3 +1,4 @@
+document.onload = function(){
 function roomsJS(roomNum, stepsNum) {
 
 	var roomsContainer = document.getElementsByClassName("roomsContainer")[roomNum - 1];
@@ -16,10 +17,6 @@ function roomsJS(roomNum, stepsNum) {
 
 	// roomsPlus.onclick = zoomIn;
 	// roomsMinus.onclick = zoomOut;
-
-
-
-
 
 
 	// ПИШЕМ САМИ ФУНКЦИИ.
@@ -112,3 +109,4 @@ function roomsJS(roomNum, stepsNum) {
 		}
 	}
 }
+};

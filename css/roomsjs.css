@@ -1,0 +1,20 @@
+.roomsContainer {
+	margin: 10px 0 0 10px;
+	position:relative;
+	overflow:hidden;
+	width:700px;
+	height:300px;
+	border:1px solid;
+}
+.roomsContent {
+	height:auto;
+	background:transparent;
+	display:inline-block;
+	position:relative;
+}
+.buttons {
+	position:absolute;
+	bottom: 2px;
+	right :2px;
+	z-index: 20;
+}
