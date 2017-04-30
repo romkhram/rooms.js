@@ -1,4 +1,9 @@
-document.onload = function(){
+
+
+		roomsJS(1, 9);
+		roomsJS(2, 5);
+		roomsJS(3, 5);
+
 function roomsJS(roomNum, stepsNum) {
 
 	var roomsContainer = document.getElementsByClassName("roomsContainer")[roomNum - 1];
@@ -6,6 +11,10 @@ function roomsJS(roomNum, stepsNum) {
 
 	var roomsPlus = document.getElementsByClassName("roomsPlus")[roomNum - 1];
 	var roomsMinus = document.getElementsByClassName("roomsMinus")[roomNum - 1];
+
+roomsContent.style.left = (roomsContainer.offsetWidth / 2) - (roomsContent.offsetWidth / 2) + "px";
+roomsContent.style.top = (roomsContainer.offsetHeight / 2) - (roomsContent.offsetHeight / 2) + "px";
+
 
 	// ЗАПУСКАЕМ ФУНКЦИИ:
 	// при нажати кнопки мыши;
@@ -21,7 +30,7 @@ function roomsJS(roomNum, stepsNum) {
 
 	// ПИШЕМ САМИ ФУНКЦИИ.
 	// Функция для нажатия:
-	function mapMoveDown() {
+	function mapMoveDown(event) {
 		// меняем вид курсора на перемещение
 		roomsContent.style.cursor = "move";
 
@@ -29,11 +38,13 @@ function roomsJS(roomNum, stepsNum) {
 		var shiftX = event.clientX - roomsContent.offsetLeft;
 		var shiftY = event.clientY - roomsContent.offsetTop;
 
+		console.log(shiftX + " " + shiftY);
+
 		// запускаем функцию перемещения при движении
 		roomsContainer.onmousemove = mapMove;
 		
 		// пишем функцию перемещения при движении
-		function mapMove() {
+		function mapMove(event) {
 			// присваиваем элементу координаты курсора, минус отступ shiftX/Y
 			roomsContent.style.left = event.clientX - shiftX + "px";
 			roomsContent.style.top = event.clientY - shiftY + "px";
@@ -55,16 +66,19 @@ function roomsJS(roomNum, stepsNum) {
 
 
 
-	var roomsContentHeight = roomsContent.offsetHeight;
 	var roomsContentWidth = roomsContent.offsetWidth;
+	var roomsContentHeight = roomsContent.offsetHeight;
 	var step = 0.1;
-	console.log(roomsContentWidth);
+	var halfStepWidth = (roomsContentWidth * step) / 2;
+	var halfStepHeight = (roomsContentHeight * step) / 2;
+
+
 
 	zoom(stepsNum);
 
 	function zoom(stepsNum) {
-
-		var steps = [];
+		var stepsWidth = [];
+		var stepsHeight = [];
 		var one = 0.9 - (stepsNum * step);
 
 		roomsPlus.onclick = zoomIn;
@@ -73,40 +87,90 @@ function roomsJS(roomNum, stepsNum) {
 		functionArrayPM();
 		
 		var one = 1;
-		steps.push((one*roomsContentWidth).toFixed(1));
+		stepsWidth.push((one*roomsContentWidth).toFixed(1));
+		stepsHeight.push((one*roomsContentHeight).toFixed(1));
 
 		functionArrayPM();
 
 		function functionArrayPM() {
 			for (var i = 0; i < stepsNum; i++) {
 				one = one + step;
-				steps.push((one*roomsContentWidth).toFixed(1));
+				stepsWidth.push((one*roomsContentWidth).toFixed(1));
+				stepsHeight.push((one*roomsContentHeight).toFixed(1));
 			}
 		}
 
-		roomsContent.style.width = steps[stepsNum] + "px";
+		roomsContent.style.width = stepsWidth[stepsNum] + "px";
 
 		var trueWidth = stepsNum;
 
 		function zoomIn() {
-			if (trueWidth < (steps.length - 1)) {
+			if (trueWidth < (stepsWidth.length - 1)) {
+				var zoomLeft = roomsContent.offsetLeft - halfStepWidth;
+				var zoomTop = roomsContent.offsetTop - halfStepHeight;
+
 				trueWidth = trueWidth + 1;
-				roomsContent.style.width = steps[trueWidth] + "px";		
+				roomsContent.style.width = stepsWidth[trueWidth] + "px";
+				roomsContent.style.height = stepsHeight[trueWidth] + "px";
+				
+				roomsContent.style.left = zoomLeft + "px";
+				roomsContent.style.top = zoomTop + "px";
 			} else {
-				trueWidth = trueWidth;
 				console.log("хуй! " + trueWidth + " это максимальное значение");
 			}
 		}
 
 		function zoomOut() {
 			if (trueWidth > 0) {
+				var zoomLeft = roomsContent.offsetLeft + halfStepWidth;
+				var zoomTop = roomsContent.offsetTop + halfStepHeight;
+
+	console.log(roomsContentHeight);
+
 				trueWidth = trueWidth - 1;
-				roomsContent.style.width = steps[trueWidth] + "px";		
+				roomsContent.style.width = stepsWidth[trueWidth] + "px";
+				roomsContent.style.height = stepsHeight[trueWidth] + "px";
+				
+				roomsContent.style.left = zoomLeft + "px";
+				roomsContent.style.top = zoomTop + "px";	
 			} else {
 				trueWidth = trueWidth;
 				console.log("хуй! " + trueWidth + " это минимальное значение");
 			}
 		}
+
+		function addOnWheel(elem, handler) {
+			if (elem.addEventListener) {
+				if ('onwheel' in document) {
+					// IE9+, FF17+
+					elem.addEventListener("wheel", handler);
+				} else if ('onmousewheel' in document) {
+					// устаревший вариант события
+					elem.addEventListener("mousewheel", handler);
+				} else {
+					// 3.5 <= Firefox < 17, более старое событие DOMMouseScroll пропустим
+					elem.addEventListener("MozMousePixelScroll", handler);
+				}
+			} else { // IE8-
+				text.attachEvent("onmousewheel", handler);
+			}
+		}
+
+		// var scale = 1;
+
+		addOnWheel(roomsContainer, function(e) {
+
+		var delta = e.deltaY || e.detail || e.wheelDelta;
+
+			// отмасштабируем при помощи функций zoomIn/Out
+			if (delta > 0) {
+				zoomOut();
+			} else {
+				zoomIn();
+			}
+			// отменим прокрутку
+			e.preventDefault();
+		});
 	}
+
 }
-};
