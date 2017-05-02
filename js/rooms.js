@@ -1,13 +1,16 @@
 
-roomsJS("room_1", 5);
-roomsJS("room_2", 5);
-roomsJS("room_3", 5);
+roomsJS("room_1", 25, 20);
+
+roomsJS("room_2", 25, 20);
+
+roomsJS("room_3", 25, 20);
 
 
-function roomsJS(roomNum, stepsNum) {
+function roomsJS(roomNum, maxPer, stepsNum) {
 
 	var roomsContainer = document.getElementById(roomNum);
 	var roomsContent = roomsContainer.querySelector(".roomsContent");
+console.log(roomsContent);
 
 	var roomsPlus = roomsContainer.querySelector(".roomsPlus");
 	var roomsMinus = roomsContainer.querySelector(".roomsMinus");
@@ -77,42 +80,71 @@ roomsContent.style.top = (roomsContainer.offsetHeight / 2) - (roomsContent.offse
 	// }
 	var roomsContentWidth = parseInt(getComputedStyle(roomsContent).width);
 	var roomsContentHeight = parseInt(getComputedStyle(roomsContent).height);
-	var step = 0.1;
-	var halfStepWidth = (roomsContentWidth * step) / 2;
-	var halfStepHeight = (roomsContentHeight * step) / 2;
+	// var step = 0.1;
+	// var halfStepWidth = (roomsContentWidth * step) / 2;
+	// var halfStepHeight = (roomsContentHeight * step) / 2;
 
 
 
-	zoom(stepsNum);
+	zoom(maxPer, stepsNum);
 
-	function zoom(stepsNum) {
+	function zoom(maxPer, stepsNum) {
 		var stepsWidth = [];
+		stepsWidth.push(roomsContentWidth);
+		console.log(stepsWidth);
+
 		var stepsHeight = [];
-		var one = 0.9 - (stepsNum * step);
+		stepsHeight.push(roomsContentHeight);
+
+		var maxZoomWidth = roomsContentWidth / maxPer * 100;
+		var maxZoomHeight = roomsContentHeight / maxPer * 100;
+		var newStepWidth = (maxZoomWidth - roomsContentWidth) / (stepsNum - 1);
+		var newStepHeight = (maxZoomHeight - roomsContentHeight) / (stepsNum - 1);
+		var halfStepWidth = newStepWidth / 2;
+		var halfStepHeight = newStepHeight / 2;
+		
+
+		var oneWidth =  roomsContentWidth;
+		var oneHeight =  roomsContentHeight;
+	// console.log(one + " " + newStep + " " + stepsNum);
+
+		function functionArrayPM(stepsNum) {
+			for (var i = 0; i < stepsNum - 1; i++) {
+				oneWidth = oneWidth + newStepWidth;
+				oneHeight = oneHeight + newStepHeight;
+		// console.log(one + " " + i);			
+				stepsWidth.push(oneWidth);	
+				stepsHeight.push(oneHeight);
+
+			}
+		}
+
+
+
+		// var one = 0.9 - (stepsNum * step);
 
 		roomsPlus.onclick = zoomIn;
 		roomsMinus.onclick = zoomOut;	
 		
-		functionArrayPM();
-		
-		var one = 1;
-		stepsWidth.push((one*roomsContentWidth).toFixed(1));
-		stepsHeight.push((one*roomsContentHeight).toFixed(1));
+		functionArrayPM(stepsNum);
+			
+		// var one = 1;
+		// stepsWidth.push((one*roomsContentWidth).toFixed(1));
+		// stepsHeight.push((one*roomsContentHeight).toFixed(1));
 
-		functionArrayPM();
+		// functionArrayPM();
 
-		function functionArrayPM() {
-			for (var i = 0; i < stepsNum; i++) {
-				one = one + step;
-				stepsWidth.push((one*roomsContentWidth).toFixed(1));
-				stepsHeight.push((one*roomsContentHeight).toFixed(1));
-			}
-		}
+		// function functionArrayPM() {
+		// 	for (var i = 0; i < stepsNum; i++) {
+		// 		one = one + step;
+		// 		stepsWidth.push((one*roomsContentWidth).toFixed(1));
+		// 		stepsHeight.push((one*roomsContentHeight).toFixed(1));
+		// 	}
+		// }
 
-		roomsContent.style.width = stepsWidth[stepsNum] + "px";
+		// roomsContent.style.width = stepsWidth[stepsNum] + "px";
 
-		var trueWidth = stepsNum;
-
+		var trueWidth = 0;
 		function zoomIn() {
 			if (trueWidth < (stepsWidth.length - 1)) {
 				var zoomLeft = roomsContent.offsetLeft - halfStepWidth;
@@ -124,6 +156,8 @@ roomsContent.style.top = (roomsContainer.offsetHeight / 2) - (roomsContent.offse
 				
 				roomsContent.style.left = zoomLeft + "px";
 				roomsContent.style.top = zoomTop + "px";
+
+console.log(roomsContent.style.width);
 			} else {
 				console.log("хуй! " + trueWidth + " это максимальное значение");
 			}
@@ -134,7 +168,7 @@ roomsContent.style.top = (roomsContainer.offsetHeight / 2) - (roomsContent.offse
 				var zoomLeft = roomsContent.offsetLeft + halfStepWidth;
 				var zoomTop = roomsContent.offsetTop + halfStepHeight;
 
-	console.log(roomsContentHeight);
+	// console.log(roomsContentHeight);
 
 				trueWidth = trueWidth - 1;
 				roomsContent.style.width = stepsWidth[trueWidth] + "px";
