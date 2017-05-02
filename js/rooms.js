@@ -1,16 +1,16 @@
 
+roomsJS("room_1", 5);
+roomsJS("room_2", 5);
+roomsJS("room_3", 5);
 
-		roomsJS(1, 9);
-		roomsJS(2, 5);
-		roomsJS(3, 5);
 
 function roomsJS(roomNum, stepsNum) {
 
-	var roomsContainer = document.getElementsByClassName("roomsContainer")[roomNum - 1];
-	var roomsContent = document.getElementsByClassName("roomsContent")[roomNum - 1];
+	var roomsContainer = document.getElementById(roomNum);
+	var roomsContent = roomsContainer.querySelector(".roomsContent");
 
-	var roomsPlus = document.getElementsByClassName("roomsPlus")[roomNum - 1];
-	var roomsMinus = document.getElementsByClassName("roomsMinus")[roomNum - 1];
+	var roomsPlus = roomsContainer.querySelector(".roomsPlus");
+	var roomsMinus = roomsContainer.querySelector(".roomsMinus");
 
 roomsContent.style.left = (roomsContainer.offsetWidth / 2) - (roomsContent.offsetWidth / 2) + "px";
 roomsContent.style.top = (roomsContainer.offsetHeight / 2) - (roomsContent.offsetHeight / 2) + "px";
@@ -65,9 +65,18 @@ roomsContent.style.top = (roomsContainer.offsetHeight / 2) - (roomsContent.offse
 		};
 
 
-
-	var roomsContentWidth = roomsContent.offsetWidth;
-	var roomsContentHeight = roomsContent.offsetHeight;
+	// if (roomsContent.offsetWidth == 0) {
+	// 	var roomsContentWidth = parseInt(getComputedStyle(roomsContent).width);
+	// } else {
+	// 	var roomsContentWidth = roomsContent.offsetWidth;
+	// }
+	// if (roomsContent.offsetHeight == 0) {
+	// 	var roomsContentHeight = parseInt(getComputedStyle(roomsContent).height);
+	// } else {
+	// 	var roomsContentWidth = roomsContent.offsetHeight;
+	// }
+	var roomsContentWidth = parseInt(getComputedStyle(roomsContent).width);
+	var roomsContentHeight = parseInt(getComputedStyle(roomsContent).height);
 	var step = 0.1;
 	var halfStepWidth = (roomsContentWidth * step) / 2;
 	var halfStepHeight = (roomsContentHeight * step) / 2;
