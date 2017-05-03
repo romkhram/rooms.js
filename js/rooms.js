@@ -5,8 +5,15 @@ roomsJS("room_2", 25, 20);
 
 roomsJS("room_3", 25, 20);
 
+roomsJS("block_1", 25, 20);
+
+
 
 function roomsJS(roomNum, maxPer, stepsNum) {
+
+// У нас есть три значения: roomNum - id контейнера; maxPer - максимальный процент изображения, который будет виден на экране; stepsNum - количество шагов зуума
+
+// Блок про перемещение
 
 	var roomsContainer = document.getElementById(roomNum);
 	var roomsContent = roomsContainer.querySelector(".roomsContent");
@@ -68,51 +75,48 @@ roomsContent.style.top = (roomsContainer.offsetHeight / 2) - (roomsContent.offse
 		};
 
 
-	// if (roomsContent.offsetWidth == 0) {
-	// 	var roomsContentWidth = parseInt(getComputedStyle(roomsContent).width);
-	// } else {
-	// 	var roomsContentWidth = roomsContent.offsetWidth;
-	// }
-	// if (roomsContent.offsetHeight == 0) {
-	// 	var roomsContentHeight = parseInt(getComputedStyle(roomsContent).height);
-	// } else {
-	// 	var roomsContentWidth = roomsContent.offsetHeight;
-	// }
+// Блок про зууум
+
+// Получаем значение ширины и высоты из css, так как при display:none; реальное значение будет 0 
 	var roomsContentWidth = parseInt(getComputedStyle(roomsContent).width);
 	var roomsContentHeight = parseInt(getComputedStyle(roomsContent).height);
-	// var step = 0.1;
-	// var halfStepWidth = (roomsContentWidth * step) / 2;
-	// var halfStepHeight = (roomsContentHeight * step) / 2;
 
 
-
+// Запускаем функцию зума
 	zoom(maxPer, stepsNum);
 
+// Пишем функцию зума
 	function zoom(maxPer, stepsNum) {
+// Создаем массивы для ширины и высоты, добавляем в них первое значение минимального размера
 		var stepsWidth = [];
 		stepsWidth.push(roomsContentWidth);
-		console.log(stepsWidth);
-
 		var stepsHeight = [];
 		stepsHeight.push(roomsContentHeight);
 
+// Получаем максимальный размер изображения
 		var maxZoomWidth = roomsContentWidth / maxPer * 100;
 		var maxZoomHeight = roomsContentHeight / maxPer * 100;
+
+// Вычисляем шаг зума в пикселях
 		var newStepWidth = (maxZoomWidth - roomsContentWidth) / (stepsNum - 1);
 		var newStepHeight = (maxZoomHeight - roomsContentHeight) / (stepsNum - 1);
+
+// Вычисляем полшага для последующего центрирования изображения при зуммировании
 		var halfStepWidth = newStepWidth / 2;
 		var halfStepHeight = newStepHeight / 2;
 		
-
+// Присваиваем oneWidth/Height текущий размер
 		var oneWidth =  roomsContentWidth;
 		var oneHeight =  roomsContentHeight;
-	// console.log(one + " " + newStep + " " + stepsNum);
 
+// Запускаем функцию создания массива со значениями шагов зуума в пикселях
+		functionArrayPM(stepsNum);
+
+// Пишем функцию: прибавляем каждый раз к текущему размеру шаг зума, присваиваем сумму текущему размеру, заносим в массив, пока не достигнем максимума
 		function functionArrayPM(stepsNum) {
 			for (var i = 0; i < stepsNum - 1; i++) {
 				oneWidth = oneWidth + newStepWidth;
-				oneHeight = oneHeight + newStepHeight;
-		// console.log(one + " " + i);			
+				oneHeight = oneHeight + newStepHeight;		
 				stepsWidth.push(oneWidth);	
 				stepsHeight.push(oneHeight);
 
@@ -120,68 +124,54 @@ roomsContent.style.top = (roomsContainer.offsetHeight / 2) - (roomsContent.offse
 		}
 
 
-
-		// var one = 0.9 - (stepsNum * step);
-
+// Запускаем функции увеличения и уменьшения при клике на кнопки
 		roomsPlus.onclick = zoomIn;
 		roomsMinus.onclick = zoomOut;	
-		
-		functionArrayPM(stepsNum);
-			
-		// var one = 1;
-		// stepsWidth.push((one*roomsContentWidth).toFixed(1));
-		// stepsHeight.push((one*roomsContentHeight).toFixed(1));
 
-		// functionArrayPM();
+// trueCalc - номер элемента массива
+		var trueCalc = 0;
 
-		// function functionArrayPM() {
-		// 	for (var i = 0; i < stepsNum; i++) {
-		// 		one = one + step;
-		// 		stepsWidth.push((one*roomsContentWidth).toFixed(1));
-		// 		stepsHeight.push((one*roomsContentHeight).toFixed(1));
-		// 	}
-		// }
-
-		// roomsContent.style.width = stepsWidth[stepsNum] + "px";
-
-		var trueWidth = 0;
+// Функция увеличения:
 		function zoomIn() {
-			if (trueWidth < (stepsWidth.length - 1)) {
+			if (trueCalc < (stepsWidth.length - 1)) {
+// Вычисляем значение на которое придется "подвинуться"
 				var zoomLeft = roomsContent.offsetLeft - halfStepWidth;
 				var zoomTop = roomsContent.offsetTop - halfStepHeight;
 
-				trueWidth = trueWidth + 1;
-				roomsContent.style.width = stepsWidth[trueWidth] + "px";
-				roomsContent.style.height = stepsHeight[trueWidth] + "px";
-				
+// увеличиваем номер элемента массива на 1, значение элемента массива присваиваем ширине и высоте изображения
+				trueCalc = trueCalc + 1;
+				roomsContent.style.width = stepsWidth[trueCalc] + "px";
+				roomsContent.style.height = stepsHeight[trueCalc] + "px";
+
+// "Двигаем" изображение, чтобы при зуме он оставался в центре				
 				roomsContent.style.left = zoomLeft + "px";
 				roomsContent.style.top = zoomTop + "px";
 
-console.log(roomsContent.style.width);
 			} else {
-				console.log("хуй! " + trueWidth + " это максимальное значение");
+				console.log("хуй! " + trueCalc + " это максимальное значение"); // Сообщаем в консоле, если достигнуто максимальное значение
 			}
 		}
 
 		function zoomOut() {
-			if (trueWidth > 0) {
+			if (trueCalc > 0) {
+// Вычисляем значение на которое придется "подвинуться"
 				var zoomLeft = roomsContent.offsetLeft + halfStepWidth;
 				var zoomTop = roomsContent.offsetTop + halfStepHeight;
 
-	// console.log(roomsContentHeight);
+// уменьшаем номер элемента массива на 1, значение элемента массива присваиваем ширине и высоте изображения
+				trueCalc = trueCalc - 1;
+				roomsContent.style.width = stepsWidth[trueCalc] + "px";
+				roomsContent.style.height = stepsHeight[trueCalc] + "px";
 
-				trueWidth = trueWidth - 1;
-				roomsContent.style.width = stepsWidth[trueWidth] + "px";
-				roomsContent.style.height = stepsHeight[trueWidth] + "px";
-				
+// "Двигаем" изображение, чтобы при зуме он оставался в центре				
 				roomsContent.style.left = zoomLeft + "px";
 				roomsContent.style.top = zoomTop + "px";	
 			} else {
-				trueWidth = trueWidth;
-				console.log("хуй! " + trueWidth + " это минимальное значение");
+				console.log("хуй! " + trueCalc + " это минимальное значение"); // Сообщаем в консоле, если достигнуто минимальное значение
 			}
 		}
 
+// Заставляем работать зум при скролинге колесом мыши
 		function addOnWheel(elem, handler) {
 			if (elem.addEventListener) {
 				if ('onwheel' in document) {
