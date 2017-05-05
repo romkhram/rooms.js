@@ -1,14 +1,4 @@
 
-roomsJS("room_1", 25, 20);
-
-roomsJS("room_2", 25, 20);
-
-roomsJS("room_3", 25, 20);
-
-roomsJS("block_1", 25, 20);
-
-
-
 function roomsJS(roomNum, maxPer, stepsNum) {
 
 // У нас есть три значения: roomNum - id контейнера; maxPer - максимальный процент изображения, который будет виден на экране; stepsNum - количество шагов зуума
@@ -17,22 +7,26 @@ function roomsJS(roomNum, maxPer, stepsNum) {
 
 	var roomsContainer = document.getElementById(roomNum);
 	var roomsContent = roomsContainer.querySelector(".roomsContent");
-console.log(roomsContent);
 
 	var roomsPlus = roomsContainer.querySelector(".roomsPlus");
 	var roomsMinus = roomsContainer.querySelector(".roomsMinus");
 
-roomsContent.style.left = (roomsContainer.offsetWidth / 2) - (roomsContent.offsetWidth / 2) + "px";
-roomsContent.style.top = (roomsContainer.offsetHeight / 2) - (roomsContent.offsetHeight / 2) + "px";
-
+	// Если не заданы координаты схемы, размещаем её по центру
+	if (roomsContent.style.left == 0) {
+	roomsContent.style.left = (roomsContainer.offsetWidth / 2) - (roomsContent.offsetWidth / 2) + "px";
+	roomsContent.style.top = (roomsContainer.offsetHeight / 2) - (roomsContent.offsetHeight / 2) + "px";
+	}
 
 	// ЗАПУСКАЕМ ФУНКЦИИ:
 	// при нажати кнопки мыши;
-	roomsContent.onmousedown = mapMoveDown;
+	// roomsContent.onmousedown = mapMoveDown;
+roomsContent.addEventListener("mousedown", mapMoveDown);
 	// при отпускании кнопки мыши;
-	roomsContent.onmouseup = mapMoveOut;
+	// roomsContent.onmouseup = mapMoveOut;
+roomsContent.addEventListener("mouseup", mapMoveOut);
 	// при выходе за пределы блока
-	roomsContainer.onmouseout = mapMoveOut;
+	// roomsContainer.onmouseout = mapMoveOut;
+roomsContent.addEventListener("mouseout", mapMoveOut);
 
 	// roomsPlus.onclick = zoomIn;
 	// roomsMinus.onclick = zoomOut;
@@ -98,12 +92,12 @@ roomsContent.style.top = (roomsContainer.offsetHeight / 2) - (roomsContent.offse
 		var maxZoomHeight = roomsContentHeight / maxPer * 100;
 
 // Вычисляем шаг зума в пикселях
-		var newStepWidth = (maxZoomWidth - roomsContentWidth) / (stepsNum - 1);
-		var newStepHeight = (maxZoomHeight - roomsContentHeight) / (stepsNum - 1);
+		var stepWidth = (maxZoomWidth - roomsContentWidth) / (stepsNum - 1);
+		var stepHeight = (maxZoomHeight - roomsContentHeight) / (stepsNum - 1);
 
 // Вычисляем полшага для последующего центрирования изображения при зуммировании
-		var halfStepWidth = newStepWidth / 2;
-		var halfStepHeight = newStepHeight / 2;
+		var halfStepWidth = stepWidth / 2;
+		var halfStepHeight = stepHeight / 2;
 		
 // Присваиваем oneWidth/Height текущий размер
 		var oneWidth =  roomsContentWidth;
@@ -115,8 +109,8 @@ roomsContent.style.top = (roomsContainer.offsetHeight / 2) - (roomsContent.offse
 // Пишем функцию: прибавляем каждый раз к текущему размеру шаг зума, присваиваем сумму текущему размеру, заносим в массив, пока не достигнем максимума
 		function functionArrayPM(stepsNum) {
 			for (var i = 0; i < stepsNum - 1; i++) {
-				oneWidth = oneWidth + newStepWidth;
-				oneHeight = oneHeight + newStepHeight;		
+				oneWidth = oneWidth + stepWidth;
+				oneHeight = oneHeight + stepHeight;		
 				stepsWidth.push(oneWidth);	
 				stepsHeight.push(oneHeight);
 
@@ -125,8 +119,11 @@ roomsContent.style.top = (roomsContainer.offsetHeight / 2) - (roomsContent.offse
 
 
 // Запускаем функции увеличения и уменьшения при клике на кнопки
-		roomsPlus.onclick = zoomIn;
-		roomsMinus.onclick = zoomOut;	
+		// roomsPlus.onclick = zoomIn;
+		// roomsMinus.onclick = zoomOut;
+
+roomsPlus.addEventListener("click", zoomIn);
+roomsMinus.addEventListener("click", zoomOut);
 
 // trueCalc - номер элемента массива
 		var trueCalc = 0;
@@ -173,20 +170,20 @@ roomsContent.style.top = (roomsContainer.offsetHeight / 2) - (roomsContent.offse
 
 // Заставляем работать зум при скролинге колесом мыши
 		function addOnWheel(elem, handler) {
-			if (elem.addEventListener) {
-				if ('onwheel' in document) {
-					// IE9+, FF17+
+			// if (elem.addEventListener) {
+			// 	if ('onwheel' in document) {
+			// 		// IE9+, FF17+
 					elem.addEventListener("wheel", handler);
-				} else if ('onmousewheel' in document) {
-					// устаревший вариант события
-					elem.addEventListener("mousewheel", handler);
-				} else {
-					// 3.5 <= Firefox < 17, более старое событие DOMMouseScroll пропустим
-					elem.addEventListener("MozMousePixelScroll", handler);
-				}
-			} else { // IE8-
-				text.attachEvent("onmousewheel", handler);
-			}
+			// 	} else if ('onmousewheel' in document) {
+			// 		// устаревший вариант события
+			// 		elem.addEventListener("mousewheel", handler);
+			// 	} else {
+			// 		// 3.5 <= Firefox < 17, более старое событие DOMMouseScroll пропустим
+			// 		elem.addEventListener("MozMousePixelScroll", handler);
+			// 	}
+			// } else { // IE8-
+			// 	text.attachEvent("onmousewheel", handler);
+			// }
 		}
 
 		// var scale = 1;
