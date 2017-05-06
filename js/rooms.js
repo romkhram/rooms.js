@@ -31,6 +31,9 @@ roomsContent.addEventListener("mouseout", mapMoveOut);
 	// roomsPlus.onclick = zoomIn;
 	// roomsMinus.onclick = zoomOut;
 
+roomsContent.addEventListener("mouseover", function(event){
+console.log(event.clientX);
+});
 
 	// ПИШЕМ САМИ ФУНКЦИИ.
 	// Функция для нажатия:
@@ -111,8 +114,8 @@ roomsContent.addEventListener("mouseout", mapMoveOut);
 			for (var i = 0; i < stepsNum - 1; i++) {
 				oneWidth = oneWidth + stepWidth;
 				oneHeight = oneHeight + stepHeight;		
-				stepsWidth.push(oneWidth);	
-				stepsHeight.push(oneHeight);
+				stepsWidth.push(Math.ceil(oneWidth));	
+				stepsHeight.push(Math.ceil(oneHeight));
 
 			}
 		}
@@ -129,42 +132,50 @@ roomsMinus.addEventListener("click", zoomOut);
 		var trueCalc = 0;
 
 // Функция увеличения:
-		function zoomIn() {
+		function zoomIn(event) {
 			if (trueCalc < (stepsWidth.length - 1)) {
+
 // Вычисляем значение на которое придется "подвинуться"
-				var zoomLeft = roomsContent.offsetLeft - halfStepWidth;
-				var zoomTop = roomsContent.offsetTop - halfStepHeight;
+				var roomsCursorX = (event.clientX - roomsContainer.offsetLeft - roomsContent.offsetLeft);
+				var roomsCursorY = (event.clientY - roomsContainer.offsetTop - roomsContent.offsetTop);
+				console.log("Координаты курсора относительно контента: " + roomsCursorX + " & " + roomsCursorY + "; размер контента " + roomsContent.offsetWidth + " & " + roomsContent.offsetHeight);
+				var perStepWidth = roomsCursorX / roomsContent.offsetWidth;
+				var perStepHeight = roomsCursorY / roomsContent.offsetHeight;
 
 // увеличиваем номер элемента массива на 1, значение элемента массива присваиваем ширине и высоте изображения
 				trueCalc = trueCalc + 1;
 				roomsContent.style.width = stepsWidth[trueCalc] + "px";
 				roomsContent.style.height = stepsHeight[trueCalc] + "px";
 
-// "Двигаем" изображение, чтобы при зуме он оставался в центре				
-				roomsContent.style.left = zoomLeft + "px";
-				roomsContent.style.top = zoomTop + "px";
+// "Двигаем" изображение
+				roomsContent.style.left = (roomsContent.offsetLeft - (stepWidth * perStepWidth)) + "px";
+				roomsContent.style.top = (roomsContent.offsetTop - (stepHeight *  perStepHeight)) + "px";			
 
 			} else {
-				console.log("хуй! " + trueCalc + " это максимальное значение"); // Сообщаем в консоле, если достигнуто максимальное значение
+				console.log(stepsWidth[trueCalc] + " это максимальное значение"); // Сообщаем в консоле, если достигнуто максимальное значение
 			}
 		}
 
-		function zoomOut() {
+		function zoomOut(event) {
 			if (trueCalc > 0) {
+
 // Вычисляем значение на которое придется "подвинуться"
-				var zoomLeft = roomsContent.offsetLeft + halfStepWidth;
-				var zoomTop = roomsContent.offsetTop + halfStepHeight;
+				var roomsCursorX = (event.clientX - roomsContainer.offsetLeft - roomsContent.offsetLeft);
+				var roomsCursorY = (event.clientY - roomsContainer.offsetTop - roomsContent.offsetTop);
+				var perStepWidth = roomsCursorX / roomsContent.offsetWidth;
+				var perStepHeight = roomsCursorY / roomsContent.offsetHeight;
 
 // уменьшаем номер элемента массива на 1, значение элемента массива присваиваем ширине и высоте изображения
 				trueCalc = trueCalc - 1;
 				roomsContent.style.width = stepsWidth[trueCalc] + "px";
 				roomsContent.style.height = stepsHeight[trueCalc] + "px";
 
-// "Двигаем" изображение, чтобы при зуме он оставался в центре				
-				roomsContent.style.left = zoomLeft + "px";
-				roomsContent.style.top = zoomTop + "px";	
+// "Двигаем" изображение			
+	roomsContent.style.left = (roomsContent.offsetLeft + (stepWidth * perStepWidth)) + "px";
+	roomsContent.style.top = (roomsContent.offsetTop + (stepHeight * perStepHeight)) + "px";
+
 			} else {
-				console.log("хуй! " + trueCalc + " это минимальное значение"); // Сообщаем в консоле, если достигнуто минимальное значение
+				console.log(stepsWidth[trueCalc] + " это минимальное значение"); // Сообщаем в консоле, если достигнуто минимальное значение
 			}
 		}
 
@@ -194,9 +205,9 @@ roomsMinus.addEventListener("click", zoomOut);
 
 			// отмасштабируем при помощи функций zoomIn/Out
 			if (delta > 0) {
-				zoomOut();
+				zoomOut(event);
 			} else {
-				zoomIn();
+				zoomIn(event);
 			}
 			// отменим прокрутку
 			e.preventDefault();
