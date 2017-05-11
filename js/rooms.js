@@ -122,8 +122,8 @@ roomsMinus.addEventListener("click", zoomOut);
 		function zoomIn(event) {
 			if (trueCalc < (stepsWidth.length - 1)) {
 
-				var roomsCursorX = event.clientX - (roomsContainer.offsetLeft - document.body.scrollLeft);
-				var roomsCursorY = event.clientY - (roomsContainer.offsetTop - document.body.scrollTop);
+				var roomsCursorX = event.clientX - (roomsContainer.offsetLeft - window.pageXOffset);
+				var roomsCursorY = event.clientY - (roomsContainer.offsetTop - window.pageYOffset);
 
 				var contentRight = roomsContent.offsetLeft + roomsContent.offsetWidth;
 				var contentBottom = roomsContent.offsetTop + roomsContent.offsetHeight;
@@ -145,8 +145,6 @@ roomsMinus.addEventListener("click", zoomOut);
 				roomsContent.style.width = stepsWidth[trueCalc] + "px";
 				roomsContent.style.height = stepsHeight[trueCalc] + "px";
 
-
-
 			} else {
 				console.log(stepsWidth[trueCalc] + " это максимальное значение"); // Сообщаем в консоле, если достигнуто максимальное значение
 			}
@@ -157,8 +155,8 @@ roomsMinus.addEventListener("click", zoomOut);
 
 // Вычисляем значение на которое придется "подвинуться"
 
-				var roomsCursorX = event.clientX - (roomsContainer.offsetLeft - document.body.scrollLeft);
-				var roomsCursorY = event.clientY - (roomsContainer.offsetTop - document.body.scrollTop);
+				var roomsCursorX = event.clientX - (roomsContainer.offsetLeft - window.pageXOffset);
+				var roomsCursorY = event.clientY - (roomsContainer.offsetTop - window.pageYOffset);
 
 				var contentRight = roomsContent.offsetLeft + roomsContent.offsetWidth;
 				var contentBottom = roomsContent.offsetTop + roomsContent.offsetHeight;
@@ -179,9 +177,6 @@ roomsMinus.addEventListener("click", zoomOut);
 				trueCalc = trueCalc - 1;
 				roomsContent.style.width = stepsWidth[trueCalc] + "px";
 				roomsContent.style.height = stepsHeight[trueCalc] + "px";
-
-
-
 
 			} else {
 				console.log(stepsWidth[trueCalc] + " это минимальное значение"); // Сообщаем в консоле, если достигнуто минимальное значение
