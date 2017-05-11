@@ -19,21 +19,12 @@ function roomsJS(roomNum, maxPer, stepsNum) {
 
 	// ЗАПУСКАЕМ ФУНКЦИИ:
 	// при нажати кнопки мыши;
-	// roomsContent.onmousedown = mapMoveDown;
 roomsContent.addEventListener("mousedown", mapMoveDown);
 	// при отпускании кнопки мыши;
-	// roomsContent.onmouseup = mapMoveOut;
 roomsContent.addEventListener("mouseup", mapMoveOut);
 	// при выходе за пределы блока
-	// roomsContainer.onmouseout = mapMoveOut;
 roomsContent.addEventListener("mouseout", mapMoveOut);
 
-	// roomsPlus.onclick = zoomIn;
-	// roomsMinus.onclick = zoomOut;
-
-roomsContent.addEventListener("mouseover", function(event){
-console.log(event.clientX);
-});
 
 	// ПИШЕМ САМИ ФУНКЦИИ.
 	// Функция для нажатия:
@@ -45,7 +36,6 @@ console.log(event.clientX);
 		var shiftX = event.clientX - roomsContent.offsetLeft;
 		var shiftY = event.clientY - roomsContent.offsetTop;
 
-		console.log(shiftX + " " + shiftY);
 
 		// запускаем функцию перемещения при движении
 		roomsContainer.onmousemove = mapMove;
@@ -122,9 +112,6 @@ console.log(event.clientX);
 
 
 // Запускаем функции увеличения и уменьшения при клике на кнопки
-		// roomsPlus.onclick = zoomIn;
-		// roomsMinus.onclick = zoomOut;
-
 roomsPlus.addEventListener("click", zoomIn);
 roomsMinus.addEventListener("click", zoomOut);
 
@@ -135,21 +122,30 @@ roomsMinus.addEventListener("click", zoomOut);
 		function zoomIn(event) {
 			if (trueCalc < (stepsWidth.length - 1)) {
 
-// Вычисляем значение на которое придется "подвинуться"
-				var roomsCursorX = (event.clientX - roomsContainer.offsetLeft - roomsContent.offsetLeft);
-				var roomsCursorY = (event.clientY - roomsContainer.offsetTop - roomsContent.offsetTop);
-				console.log("Координаты курсора относительно контента: " + roomsCursorX + " & " + roomsCursorY + "; размер контента " + roomsContent.offsetWidth + " & " + roomsContent.offsetHeight);
-				var perStepWidth = roomsCursorX / roomsContent.offsetWidth;
-				var perStepHeight = roomsCursorY / roomsContent.offsetHeight;
+				var roomsCursorX = event.clientX - (roomsContainer.offsetLeft - document.body.scrollLeft);
+				var roomsCursorY = event.clientY - (roomsContainer.offsetTop - document.body.scrollTop);
+
+				var contentRight = roomsContent.offsetLeft + roomsContent.offsetWidth;
+				var contentBottom = roomsContent.offsetTop + roomsContent.offsetHeight;
+
+				var perStepWidth = (roomsCursorX - roomsContent.offsetLeft) / roomsContent.offsetWidth;
+				var perStepHeight = (roomsCursorY - roomsContent.offsetTop) / roomsContent.offsetHeight;
+
+// "Двигаем" изображение
+				if (roomsCursorX < roomsContent.offsetLeft || roomsCursorX > contentRight || roomsCursorY < roomsContent.offsetTop || roomsCursorY > contentBottom) {
+					roomsContent.style.left = (roomsContent.offsetLeft - (stepWidth * 0.5)) + "px";
+					roomsContent.style.top = (roomsContent.offsetTop - (stepHeight *  0.5)) + "px";		
+				} else {
+					roomsContent.style.left = (roomsContent.offsetLeft - (stepWidth * perStepWidth)) + "px";
+					roomsContent.style.top = (roomsContent.offsetTop - (stepHeight *  perStepHeight)) + "px";			
+				}
 
 // увеличиваем номер элемента массива на 1, значение элемента массива присваиваем ширине и высоте изображения
 				trueCalc = trueCalc + 1;
 				roomsContent.style.width = stepsWidth[trueCalc] + "px";
 				roomsContent.style.height = stepsHeight[trueCalc] + "px";
 
-// "Двигаем" изображение
-				roomsContent.style.left = (roomsContent.offsetLeft - (stepWidth * perStepWidth)) + "px";
-				roomsContent.style.top = (roomsContent.offsetTop - (stepHeight *  perStepHeight)) + "px";			
+
 
 			} else {
 				console.log(stepsWidth[trueCalc] + " это максимальное значение"); // Сообщаем в консоле, если достигнуто максимальное значение
@@ -160,24 +156,38 @@ roomsMinus.addEventListener("click", zoomOut);
 			if (trueCalc > 0) {
 
 // Вычисляем значение на которое придется "подвинуться"
-				var roomsCursorX = (event.clientX - roomsContainer.offsetLeft - roomsContent.offsetLeft);
-				var roomsCursorY = (event.clientY - roomsContainer.offsetTop - roomsContent.offsetTop);
-				var perStepWidth = roomsCursorX / roomsContent.offsetWidth;
-				var perStepHeight = roomsCursorY / roomsContent.offsetHeight;
+
+				var roomsCursorX = event.clientX - (roomsContainer.offsetLeft - document.body.scrollLeft);
+				var roomsCursorY = event.clientY - (roomsContainer.offsetTop - document.body.scrollTop);
+
+				var contentRight = roomsContent.offsetLeft + roomsContent.offsetWidth;
+				var contentBottom = roomsContent.offsetTop + roomsContent.offsetHeight;
+
+				var perStepWidth = (roomsCursorX - roomsContent.offsetLeft) / roomsContent.offsetWidth;
+				var perStepHeight = (roomsCursorY - roomsContent.offsetTop) / roomsContent.offsetHeight;
+
+// "Двигаем" изображение
+				if (roomsCursorX < roomsContent.offsetLeft || roomsCursorX > contentRight || roomsCursorY < roomsContent.offsetTop || roomsCursorY > contentBottom) {
+					roomsContent.style.left = (roomsContent.offsetLeft + (stepWidth * 0.5)) + "px";
+					roomsContent.style.top = (roomsContent.offsetTop + (stepHeight *  0.5)) + "px";	
+				} else {
+					roomsContent.style.left = (roomsContent.offsetLeft + (stepWidth * perStepWidth)) + "px";
+					roomsContent.style.top = (roomsContent.offsetTop + (stepHeight *  perStepHeight)) + "px";				
+				}
 
 // уменьшаем номер элемента массива на 1, значение элемента массива присваиваем ширине и высоте изображения
 				trueCalc = trueCalc - 1;
 				roomsContent.style.width = stepsWidth[trueCalc] + "px";
 				roomsContent.style.height = stepsHeight[trueCalc] + "px";
 
-// "Двигаем" изображение			
-	roomsContent.style.left = (roomsContent.offsetLeft + (stepWidth * perStepWidth)) + "px";
-	roomsContent.style.top = (roomsContent.offsetTop + (stepHeight * perStepHeight)) + "px";
+
+
 
 			} else {
 				console.log(stepsWidth[trueCalc] + " это минимальное значение"); // Сообщаем в консоле, если достигнуто минимальное значение
 			}
 		}
+
 
 // Заставляем работать зум при скролинге колесом мыши
 		function addOnWheel(elem, handler) {
@@ -205,13 +215,48 @@ roomsMinus.addEventListener("click", zoomOut);
 
 			// отмасштабируем при помощи функций zoomIn/Out
 			if (delta > 0) {
-				zoomOut(event);
+				zoomOut(e);
 			} else {
-				zoomIn(event);
+				zoomIn(e);
 			}
 			// отменим прокрутку
 			e.preventDefault();
 		});
 	}
 
+}
+
+
+// document.getElementById("demo").onclick = function() {myFunction()};
+
+// function myFunction() {
+//     document.getElementById("demo").innerHTML = "YOU CLICKED ME!";
+// }
+
+
+ // ontouchmove="move_object(event);"
+
+// document.getElementById('floating').addEventListener("ontouchmove", move_object(event));
+// // document.getElementById('floating').ontouchmove = function() {move_object(event)};
+// // Перетаскивание элемента 
+// function move_object(event) {
+//     // Подавить событие 
+//     event.preventDefault(); 
+//     var left=event.touches[0].pageX; 
+//     var top=event.touches[0].pageY; 
+//     // Переместить элемент 
+//     var el=document.getElementById('floating'); 
+//     el.style.top=top+'px'; 
+//     el.style.left=left+'px'; 
+// }
+
+
+document.getElementById("floating").ontouchmove = function(e) {
+    event.preventDefault(); 
+    var left=event.touches[0].pageX; 
+    var top=event.touches[0].pageY; 
+    // Переместить элемент 
+    var el=document.getElementById('floating'); 
+    el.style.top=top+'px'; 
+    el.style.left=left+'px'; 
 }
