@@ -61,6 +61,21 @@ roomsContent.addEventListener("mouseout", mapMoveOut);
 			return false;
 		};
 
+	roomsContent.addEventListener('touchstart', function(event) {
+		if (event.targetTouches.length == 1) {
+			var touch=event.targetTouches[0];
+			touchOffsetX = touch.pageX - roomsContent.offsetLeft;
+			touchOffsetY = touch.pageY - roomsContent.offsetTop;
+		}
+	}, false);
+	// Передвигаем объект
+	roomsContent.addEventListener('touchmove', function(event) {
+		if (event.targetTouches.length == 1) {
+			var touch = event.targetTouches[0];
+			roomsContent.style.left = touch.pageX-touchOffsetX + 'px';
+			roomsContent.style.top = touch.pageY-touchOffsetY + 'px';
+		}
+	}, false);
 
 // Блок про зууум
 
@@ -122,8 +137,8 @@ roomsMinus.addEventListener("click", zoomOut);
 		function zoomIn(event) {
 			if (trueCalc < (stepsWidth.length - 1)) {
 
-				var roomsCursorX = event.clientX - (roomsContainer.offsetLeft - window.pageXOffset);
-				var roomsCursorY = event.clientY - (roomsContainer.offsetTop - window.pageYOffset);
+				var roomsCursorX = event.clientX - (roomsContainer.offsetLeft - document.body.scrollLeft);
+				var roomsCursorY = event.clientY - (roomsContainer.offsetTop - document.body.scrollTop);
 
 				var contentRight = roomsContent.offsetLeft + roomsContent.offsetWidth;
 				var contentBottom = roomsContent.offsetTop + roomsContent.offsetHeight;
@@ -145,6 +160,8 @@ roomsMinus.addEventListener("click", zoomOut);
 				roomsContent.style.width = stepsWidth[trueCalc] + "px";
 				roomsContent.style.height = stepsHeight[trueCalc] + "px";
 
+
+
 			} else {
 				console.log(stepsWidth[trueCalc] + " это максимальное значение"); // Сообщаем в консоле, если достигнуто максимальное значение
 			}
@@ -155,8 +172,8 @@ roomsMinus.addEventListener("click", zoomOut);
 
 // Вычисляем значение на которое придется "подвинуться"
 
-				var roomsCursorX = event.clientX - (roomsContainer.offsetLeft - window.pageXOffset);
-				var roomsCursorY = event.clientY - (roomsContainer.offsetTop - window.pageYOffset);
+				var roomsCursorX = event.clientX - (roomsContainer.offsetLeft - document.body.scrollLeft);
+				var roomsCursorY = event.clientY - (roomsContainer.offsetTop - document.body.scrollTop);
 
 				var contentRight = roomsContent.offsetLeft + roomsContent.offsetWidth;
 				var contentBottom = roomsContent.offsetTop + roomsContent.offsetHeight;
@@ -178,28 +195,30 @@ roomsMinus.addEventListener("click", zoomOut);
 				roomsContent.style.width = stepsWidth[trueCalc] + "px";
 				roomsContent.style.height = stepsHeight[trueCalc] + "px";
 
+
+
+
 			} else {
 				console.log(stepsWidth[trueCalc] + " это минимальное значение"); // Сообщаем в консоле, если достигнуто минимальное значение
 			}
 		}
 
-
 // Заставляем работать зум при скролинге колесом мыши
 		function addOnWheel(elem, handler) {
-			// if (elem.addEventListener) {
-			// 	if ('onwheel' in document) {
-			// 		// IE9+, FF17+
+			if (elem.addEventListener) {
+				if ('onwheel' in document) {
+					// IE9+, FF17+
 					elem.addEventListener("wheel", handler);
-			// 	} else if ('onmousewheel' in document) {
-			// 		// устаревший вариант события
-			// 		elem.addEventListener("mousewheel", handler);
-			// 	} else {
-			// 		// 3.5 <= Firefox < 17, более старое событие DOMMouseScroll пропустим
-			// 		elem.addEventListener("MozMousePixelScroll", handler);
-			// 	}
-			// } else { // IE8-
-			// 	text.attachEvent("onmousewheel", handler);
-			// }
+				} else if ('onmousewheel' in document) {
+					// устаревший вариант события
+					elem.addEventListener("mousewheel", handler);
+				} else {
+					// 3.5 <= Firefox < 17, более старое событие DOMMouseScroll пропустим
+					elem.addEventListener("MozMousePixelScroll", handler);
+				}
+			} else { // IE8-
+				text.attachEvent("onmousewheel", handler);
+			}
 		}
 
 		// var scale = 1;
@@ -221,37 +240,3 @@ roomsMinus.addEventListener("click", zoomOut);
 
 }
 
-
-// document.getElementById("demo").onclick = function() {myFunction()};
-
-// function myFunction() {
-//     document.getElementById("demo").innerHTML = "YOU CLICKED ME!";
-// }
-
-
- // ontouchmove="move_object(event);"
-
-// document.getElementById('floating').addEventListener("ontouchmove", move_object(event));
-// // document.getElementById('floating').ontouchmove = function() {move_object(event)};
-// // Перетаскивание элемента 
-// function move_object(event) {
-//     // Подавить событие 
-//     event.preventDefault(); 
-//     var left=event.touches[0].pageX; 
-//     var top=event.touches[0].pageY; 
-//     // Переместить элемент 
-//     var el=document.getElementById('floating'); 
-//     el.style.top=top+'px'; 
-//     el.style.left=left+'px'; 
-// }
-
-
-document.getElementById("floating").ontouchmove = function(e) {
-    event.preventDefault(); 
-    var left=event.touches[0].pageX; 
-    var top=event.touches[0].pageY; 
-    // Переместить элемент 
-    var el=document.getElementById('floating'); 
-    el.style.top=top+'px'; 
-    el.style.left=left+'px'; 
-}
