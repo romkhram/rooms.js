@@ -61,21 +61,23 @@ roomsContent.addEventListener("mouseout", mapMoveOut);
 			return false;
 		};
 
-	roomsContent.addEventListener('touchstart', function(event) {
-		if (event.targetTouches.length == 1) {
-			var touch=event.targetTouches[0];
-			touchOffsetX = touch.pageX - roomsContent.offsetLeft;
-			touchOffsetY = touch.pageY - roomsContent.offsetTop;
-		}
-	}, false);
-	// Передвигаем объект
-	roomsContent.addEventListener('touchmove', function(event) {
-		if (event.targetTouches.length == 1) {
-			var touch = event.targetTouches[0];
-			roomsContent.style.left = touch.pageX-touchOffsetX + 'px';
-			roomsContent.style.top = touch.pageY-touchOffsetY + 'px';
-		}
-	}, false);
+	// roomsContent.addEventListener('touchstart', function(event) {
+	// 	event.preventDefault();
+	// 	if (event.targetTouches.length == 1) {
+	// 		var touch=event.targetTouches[0];
+	// 		touchOffsetX = touch.pageX - roomsContent.offsetLeft;
+	// 		touchOffsetY = touch.pageY - roomsContent.offsetTop;
+	// 	}
+	// }, false);
+	// // Передвигаем объект
+	// roomsContent.addEventListener('touchmove', function(event) {
+	// 	event.preventDefault();
+	// 	if (event.targetTouches.length == 1) {
+	// 		var touch = event.targetTouches[0];
+	// 		roomsContent.style.left = touch.pageX-touchOffsetX + 'px';
+	// 		roomsContent.style.top = touch.pageY-touchOffsetY + 'px';
+	// 	}
+	// }, false);
 
 // Блок про зууум
 
@@ -94,6 +96,8 @@ roomsContent.addEventListener("mouseout", mapMoveOut);
 		stepsWidth.push(roomsContentWidth);
 		var stepsHeight = [];
 		stepsHeight.push(roomsContentHeight);
+
+		console.log(stepsWidth);
 
 // Получаем максимальный размер изображения
 		var maxZoomWidth = roomsContentWidth / maxPer * 100;
@@ -127,8 +131,35 @@ roomsContent.addEventListener("mouseout", mapMoveOut);
 
 
 // Запускаем функции увеличения и уменьшения при клике на кнопки
-roomsPlus.addEventListener("click", zoomIn);
-roomsMinus.addEventListener("click", zoomOut);
+roomsPlus.addEventListener("click", function() {
+			if (trueCalc < (stepsWidth.length - 1)) {
+				roomsContent.style.left = (roomsContent.offsetLeft - (stepWidth * 0.5)) + "px";
+				roomsContent.style.top = (roomsContent.offsetTop - (stepHeight *  0.5)) + "px";		
+// увеличиваем номер элемента массива на 1, значение элемента массива присваиваем ширине и высоте изображения
+				trueCalc = trueCalc + 1;
+				roomsContent.style.width = stepsWidth[trueCalc] + "px";
+				roomsContent.style.height = stepsHeight[trueCalc] + "px";
+
+
+
+			} else {
+				console.log(stepsWidth[trueCalc] + " это максимальное значение"); // Сообщаем в консоле, если достигнуто максимальное значение
+			}
+});
+roomsMinus.addEventListener("click", function() {
+			if (trueCalc > 0) {
+				roomsContent.style.left = (roomsContent.offsetLeft + (stepWidth * 0.5)) + "px";
+				roomsContent.style.top = (roomsContent.offsetTop + (stepHeight *  0.5)) + "px";		
+// увеличиваем номер элемента массива на 1, значение элемента массива присваиваем ширине и высоте изображения
+				trueCalc = trueCalc - 1;
+				roomsContent.style.width = stepsWidth[trueCalc] + "px";
+				roomsContent.style.height = stepsHeight[trueCalc] + "px";
+
+
+			} else {
+				console.log(stepsWidth[trueCalc] + " это максимальное значение"); // Сообщаем в консоле, если достигнуто максимальное значение
+			}
+});
 
 // trueCalc - номер элемента массива
 		var trueCalc = 0;
@@ -137,8 +168,8 @@ roomsMinus.addEventListener("click", zoomOut);
 		function zoomIn(event) {
 			if (trueCalc < (stepsWidth.length - 1)) {
 
-				var roomsCursorX = event.clientX - (roomsContainer.offsetLeft - document.body.scrollLeft);
-				var roomsCursorY = event.clientY - (roomsContainer.offsetTop - document.body.scrollTop);
+				var roomsCursorX = event.clientX - (roomsContainer.offsetLeft - window.pageXOffset);
+				var roomsCursorY = event.clientY - (roomsContainer.offsetTop - window.pageYOffset);
 
 				var contentRight = roomsContent.offsetLeft + roomsContent.offsetWidth;
 				var contentBottom = roomsContent.offsetTop + roomsContent.offsetHeight;
@@ -172,8 +203,8 @@ roomsMinus.addEventListener("click", zoomOut);
 
 // Вычисляем значение на которое придется "подвинуться"
 
-				var roomsCursorX = event.clientX - (roomsContainer.offsetLeft - document.body.scrollLeft);
-				var roomsCursorY = event.clientY - (roomsContainer.offsetTop - document.body.scrollTop);
+				var roomsCursorX = event.clientX - (roomsContainer.offsetLeft - window.pageXOffset);
+				var roomsCursorY = event.clientY - (roomsContainer.offsetTop - window.pageYOffset);
 
 				var contentRight = roomsContent.offsetLeft + roomsContent.offsetWidth;
 				var contentBottom = roomsContent.offsetTop + roomsContent.offsetHeight;
@@ -230,13 +261,88 @@ roomsMinus.addEventListener("click", zoomOut);
 			// отмасштабируем при помощи функций zoomIn/Out
 			if (delta > 0) {
 				zoomOut(e);
+
 			} else {
 				zoomIn(e);
+
 			}
 			// отменим прокрутку
 			e.preventDefault();
 		});
 	}
 
+
+var scaling = false;
+var dist = 0;
+var scale_factor = 1.0;
+var curr_scale = 1.0;
+var max_zoom = 100 / maxPer;
+console.log(maxPer + " maxWidth " + max_zoom);
+var min_zoom = 1.0;
+
+/*Пишем функцию, которая определяет расстояние меж пальцами*/
+function distance (p1, p2) {
+	return (Math.sqrt(Math.pow((p1.clientX - p2.clientX), 2) + Math.pow((p1.clientY - p2.clientY), 2)));
+}
+/*Ловим начало косания*/
+roomsContent.addEventListener('touchstart', function(evt) {
+	evt.preventDefault();
+	var tt = evt.targetTouches;
+	if (tt.length >= 2) {
+		dist = distance(tt[0], tt[1]);
+		scaling = true;
+	} else {
+		scaling = false;
+		touchOffsetX = tt[0].pageX - roomsContent.offsetLeft;
+		touchOffsetY = tt[0].pageY - roomsContent.offsetTop;
+	}
+}, false);
+
+/*Ловим зумирование*/
+roomsContent.addEventListener('touchmove', function(evt) {
+	evt.preventDefault();
+	var tt = evt.targetTouches;
+	if (scaling) {
+		curr_scale = distance(tt[0], tt[1]) / dist * scale_factor;
+		roomsContent.style.WebkitTransform = "scale(" + curr_scale + ", " + curr_scale + ")";
+	} else {
+			roomsContent.style.left = tt[0].pageX - touchOffsetX + 'px';
+			roomsContent.style.top = tt[0].pageY - touchOffsetY + 'px';
+	}
+}, false);
+
+/*Ловим конец косания*/
+roomsContent.addEventListener('touchend', function(evt) {
+	var tt = evt.targetTouches;
+	if (tt.length < 2) {
+		scaling = false;
+		if (curr_scale < min_zoom) {
+			scale_factor = min_zoom;
+		} else {
+			if (curr_scale > max_zoom) {
+				scale_factor = max_zoom;
+			} else {
+				scale_factor = curr_scale;
+			}
+		}
+		roomsContent.style.WebkitTransform = "scale(" + scale_factor + ", " + scale_factor + ")";
+		
+	} else {
+		scaling = true;
+	}
+}, false);
+
+function selectLayer() {
+if (scale_factor > 2.5) {
+	alert("jab " + stepsWidth[3]);
+} else {
+	alert("pyst kak ranshe");
 }
 
+
+}
+
+}
+
+
+console.log(stepsWidth);

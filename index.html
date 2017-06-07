@@ -6,6 +6,10 @@
 		<link rel="stylesheet" type="text/css" href="css/roomsjs.css">
 	</head>
 	<body style="margin:0 0 30px;">
+	<header>
+		<h1>Free interactive JavaScript floor plans on your website</h1>
+		<h2>For malls and other real estate</h2>	
+	</header>
 
 		<div class="roomsContainer" id="block_1">
 		<span style="display:block;position:absolute;left:170px;top:45px;width:2px;height:2px;background:red;z-index:999;"></span>
@@ -14,30 +18,29 @@
 				<img src="img/rooms.svg" style="width:40%;height:auto;position:absolute;z-index:9;left:10px;top:10px;" alt="" />
 				<img src="img/rooms.svg" style="width:40%;height:auto;position:absolute;z-index:10;;left:0;top:0;" alt="" />
 			</div> 
-			<div class="buttons"><button class="roomsMinus">-</button> <button class="roomsPlus">+</button></div>
+			<div class="buttons"><span class="roomsMinus">&minus;</span> <span class="roomsPlus">+</span></div>
 		</div>
 
 		<div class="roomsContainer" id="room_1">
 		
 			<img class="roomsContent" src="img/rooms.svg" style="width:400px;height:300px" alt="" />
-			<div class="buttons"><button class="roomsMinus">-</button> <button class="roomsPlus">+</button></div>
+			<div class="buttons"><span class="roomsMinus">&minus;</span> <span class="roomsPlus">+</span></div>
 		</div>
 
 		<div class="roomsContainer" style="height:450px;" id="room_2">
 			<img class="roomsContent" src="img/flat.png" style="width:405px;height:400px;" alt="" />
-			<div class="buttons"><button class="roomsMinus">-</button> <button class="roomsPlus">+</button></div>
+			<div class="buttons"><span class="roomsMinus">&minus;</span> <span class="roomsPlus">+</span></div>
 		</div>
 
 		<div class="roomsContainer" style="width:886px;height:464px;" id="room_3">
 			<img class="roomsContent" src="img/mebelwood.svg" style="width:900px;height:600px;left:10px;top:30px;" alt="" />
-			<div class="buttons"><button class="roomsMinus">-</button> <button class="roomsPlus">+</button></div>
+			<div class="buttons"><span class="roomsMinus">&minus;</span> <span class="roomsPlus">+</span></div>
 		</div>
-<div id="floating">Drag me</div>
 	<script src="js/rooms.js" type="text/javascript"></script>
 	<script type="text/javascript">
 
 
-roomsJS("room_1", 25, 10);
+roomsJS("room_1", 20, 10);
 
 roomsJS("room_2", 25, 20);
 
