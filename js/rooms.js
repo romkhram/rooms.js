@@ -1,9 +1,11 @@
+function roomsJS(roomNum, maxPer, stepsNum, changeLayer) {
 
-function roomsJS(roomNum, maxPer, stepsNum) {
 
-// У нас есть три значения: roomNum - id контейнера; maxPer - максимальный процент изображения, который будет виден на экране; stepsNum - количество шагов зуума
+var thisContainer = this.document.querySelector(".roomsContent");
 
-// Блок про перемещение
+// We have three values: roomNum - id container; maxPer - maximum percentage of the image which will be visible on the screen; stepsNum - the number of steps of souma
+
+// Block about the movement
 
 	var roomsContainer = document.getElementById(roomNum);
 	var roomsContent = roomsContainer.querySelector(".roomsContent");
@@ -11,49 +13,49 @@ function roomsJS(roomNum, maxPer, stepsNum) {
 	var roomsPlus = roomsContainer.querySelector(".roomsPlus");
 	var roomsMinus = roomsContainer.querySelector(".roomsMinus");
 
-	// Если не заданы координаты схемы, размещаем её по центру
+	// If not specified the coordinates of a schema, place it in the center
 	if (roomsContent.style.left == 0) {
 	roomsContent.style.left = (roomsContainer.offsetWidth / 2) - (roomsContent.offsetWidth / 2) + "px";
 	roomsContent.style.top = (roomsContainer.offsetHeight / 2) - (roomsContent.offsetHeight / 2) + "px";
 	}
 
-	// ЗАПУСКАЕМ ФУНКЦИИ:
-	// при нажати кнопки мыши;
+// RUN FUNCTION:
+// when pressing the mouse button;
 roomsContent.addEventListener("mousedown", mapMoveDown);
-	// при отпускании кнопки мыши;
+// when the mouse button is released;
 roomsContent.addEventListener("mouseup", mapMoveOut);
-	// при выходе за пределы блока
+// when leaving the block
 roomsContent.addEventListener("mouseout", mapMoveOut);
 
 
-	// ПИШЕМ САМИ ФУНКЦИИ.
-	// Функция для нажатия:
+	// WRITE THE FUNCTIONS.
+	// Function for the click:
 	function mapMoveDown(event) {
-		// меняем вид курсора на перемещение
+		// change the cursor to move
 		roomsContent.style.cursor = "move";
 
-		// вычисляем расстояние, которое надо отступить от левого верхнего угла элемента при нажатии
+		// calculate the distance that it is necessary to deviate from the upper left corner of the item when clicked
 		var shiftX = event.clientX - roomsContent.offsetLeft;
 		var shiftY = event.clientY - roomsContent.offsetTop;
 
 
-		// запускаем функцию перемещения при движении
+		// start the move function is the motion
 		roomsContainer.onmousemove = mapMove;
 		
-		// пишем функцию перемещения при движении
+		// write a function to move the motion
 		function mapMove(event) {
-			// присваиваем элементу координаты курсора, минус отступ shiftX/Y
+		// assign the element the cursor coordinates, minus the indentation shiftX/Y
 			roomsContent.style.left = event.clientX - shiftX + "px";
 			roomsContent.style.top = event.clientY - shiftY + "px";
 		}
 
 	}
 
-	// Функция для отпускания и выхода за пределы блока:
+	// Function for releasing and exiting the unit:
 	function mapMoveOut() {
-		// меняем курсор на default
+		// change the cursor to default
 		roomsContent.style.cursor = "default";
-		// функции перемещения при движении присваиваем значение null
+		// function move when the movement is assigned a null value
 		roomsContainer.onmousemove = null;
 	}
 
@@ -79,25 +81,30 @@ roomsContent.addEventListener("mouseout", mapMoveOut);
 	// 	}
 	// }, false);
 
-// Блок про зууум
 
-// Получаем значение ширины и высоты из css, так как при display:none; реальное значение будет 0 
+
+
+// Zoom block
+
+// Get width and height from css, as in display:none; the real value will be 0 
 	var roomsContentWidth = parseInt(getComputedStyle(roomsContent).width);
 	var roomsContentHeight = parseInt(getComputedStyle(roomsContent).height);
 
 
-// Запускаем функцию зума
-	zoom(maxPer, stepsNum);
+// Launch the zoom function
+	zoom(maxPer, stepsNum, changeLayer);
 
-// Пишем функцию зума
-	function zoom(maxPer, stepsNum) {
+
+
+
+
+
 // Создаем массивы для ширины и высоты, добавляем в них первое значение минимального размера
 		var stepsWidth = [];
 		stepsWidth.push(roomsContentWidth);
 		var stepsHeight = [];
 		stepsHeight.push(roomsContentHeight);
 
-		console.log(stepsWidth);
 
 // Получаем максимальный размер изображения
 		var maxZoomWidth = roomsContentWidth / maxPer * 100;
@@ -130,6 +137,24 @@ roomsContent.addEventListener("mouseout", mapMoveOut);
 		}
 
 
+var stepSelect = stepsWidth[changeLayer] / stepsWidth[0];
+
+
+
+
+
+
+
+
+
+// Пишем функцию зума
+	function zoom(maxPer, stepsNum, changeLayer) {
+
+
+
+
+
+
 // Запускаем функции увеличения и уменьшения при клике на кнопки
 roomsPlus.addEventListener("click", function() {
 			if (trueCalc < (stepsWidth.length - 1)) {
@@ -145,6 +170,7 @@ roomsPlus.addEventListener("click", function() {
 			} else {
 				console.log(stepsWidth[trueCalc] + " это максимальное значение"); // Сообщаем в консоле, если достигнуто максимальное значение
 			}
+			// selectLayer();
 });
 roomsMinus.addEventListener("click", function() {
 			if (trueCalc > 0) {
@@ -159,6 +185,7 @@ roomsMinus.addEventListener("click", function() {
 			} else {
 				console.log(stepsWidth[trueCalc] + " это максимальное значение"); // Сообщаем в консоле, если достигнуто максимальное значение
 			}
+			// selectLayer();
 });
 
 // trueCalc - номер элемента массива
@@ -266,9 +293,14 @@ roomsMinus.addEventListener("click", function() {
 				zoomIn(e);
 
 			}
+
 			// отменим прокрутку
 			e.preventDefault();
 		});
+
+
+		
+
 	}
 
 
@@ -304,11 +336,17 @@ roomsContent.addEventListener('touchmove', function(evt) {
 	var tt = evt.targetTouches;
 	if (scaling) {
 		curr_scale = distance(tt[0], tt[1]) / dist * scale_factor;
+		// alert(curr_scale);
 		roomsContent.style.WebkitTransform = "scale(" + curr_scale + ", " + curr_scale + ")";
+		// roomsContent.offsetWidth = roomsContent.offsetWidth * curr_scale;
+		// roomsContent.offsetHeight = roomsContent.offsetHeight * curr_scale;
+
+		// roomsContent.style.transformOrigin = "50% 50%";
 	} else {
 			roomsContent.style.left = tt[0].pageX - touchOffsetX + 'px';
 			roomsContent.style.top = tt[0].pageY - touchOffsetY + 'px';
 	}
+
 }, false);
 
 /*Ловим конец косания*/
@@ -325,24 +363,65 @@ roomsContent.addEventListener('touchend', function(evt) {
 				scale_factor = curr_scale;
 			}
 		}
+
+
+		// alert(roomsContent.offsetWidth + " + " + roomsContent.offsetHeight);
 		roomsContent.style.WebkitTransform = "scale(" + scale_factor + ", " + scale_factor + ")";
+
+		// alert(roomsContent.offsetHeight * curr_scale);
+		// alert(roomsContent.offsetTop);
+		// alert(roomsContent.offsetTop - roomsContainer.offsetTop);
+
+		// selectLayer();
 		
 	} else {
 		scaling = true;
 	}
 }, false);
 
-function selectLayer() {
-if (scale_factor > 2.5) {
-	alert("jab " + stepsWidth[3]);
-} else {
-	alert("pyst kak ranshe");
+
+
+
+
+
+
+if (roomsContent.children.length > 1) {
+
+	var contChild = roomsContent.children;
+
+	var zPeriod = 10;
+	for (var i = 1; i < contChild.length; i++) {
+		contChild[i].style.zIndex = (zPeriod + i);
+		contChild[i].style.display = "none";
+	}
+
+
+	roomsContent.addEventListener('touchend', function() {
+		selectLayer();
+	}, false);
+	roomsContainer.addEventListener("wheel", function() {
+		selectLayer();
+	}, false);
+	roomsPlus.addEventListener("click", function() {
+		selectLayer();
+	}, false);
+	roomsMinus.addEventListener("click", function() {
+		selectLayer();
+	}, false);
+
+
+
+	var selectLayer = function() {
+		if (scale_factor > stepSelect || roomsContent.offsetWidth >= stepsWidth[changeLayer]) {
+			roomsContent.children[1].style.display = "inline-block";
+		} else {
+			roomsContent.children[1].style.display = "none";
+		}
+	}
 }
 
 
 }
 
-}
 
 
-console.log(stepsWidth);

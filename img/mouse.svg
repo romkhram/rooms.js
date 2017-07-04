@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 13.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 14948)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="80px"
+   height="140px" viewBox="0 0 80 140" style="enable-background:new 0 0 80 140;" xml:space="preserve">
+
+<g id="Layer_1">
+  <path style="fill:#fff;" d="M39,80h2V61h-2V80z M80,40C80,17.908,62.092,0,40,0S0,17.908,0,40v60c0,22.092,17.908,40,40,40
+    s40-17.908,40-40V40z M78,100c0,20.986-17.014,38-38,38S2,120.986,2,100V40C2,19.014,19.013,2,40,2s38,17.014,38,38V100z"/>
+  <rect x="39" y="1" style="fill:#fff;" width="2" height="18"/>
+</g>
+
+<g id="Layer_2">
+  <path style="fill:#fff;" d="M40,18c-6.627,0-12,5.373-12,12v20c0,6.627,5.373,12,12,12s12-5.373,12-12V30
+    C52,23.373,46.627,18,40,18z M50,50c0,5.522-4.478,10-10,10s-10-4.478-10-10V30c0-5.522,4.478-10,10-10s10,4.478,10,10V50z"/>
+</g>
+
+<g id="Layer_3">
+  <polygon id="arrow" style="fill:#fff;" points="40,38 36,42 39,42 39,50 36,50 40,54 44,50 41,50 41,42 44,42   "/>
+</g>
+
+
+
+
+<animate 
+           xlink:href="#arrow"
+           attributeName="points"
+           from="40,38 36,42 39,42 39,50 36,50 40,54 44,50 41,50 41,42 44,42  "
+           to="40,26 36,30 39,30 39,38 36,38 40,42 44,38 41,38 41,30 44,30    " 
+           dur="1.0s"
+           begin="0s"
+           repeatCount="indefinite"
+           fill="freeze" />
+
+
+</svg>
